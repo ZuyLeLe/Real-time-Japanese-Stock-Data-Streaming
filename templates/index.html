@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Stock Market Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Japan Stock Market Tracker</h1>
+        </header>
+        <main>
+            <form id="stockForm" class="stock-form">
+                <div class="form-group">
+                    <label for="ticker">Choose a ticker:</label>
+                    <select name="ticker" id="ticker">
+                        {% for n in sd %}
+                        <option value="{{ n }}">{{ sd[n] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date_range">Choose a date range:</label>
+                    <select name="date_range" id="date_range">
+                        <option value="5d">Past 5 days</option>
+                        <option value="1mo">Past 1 month</option>
+                        <option value="3mo">Past 3 months</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Display</button>
+            </form>
+            <div id="loadingSpinner" class="loading-spinner" style="display: none;"></div>
+            <div id="stockGraph" class="stock-graph"></div>
+        </main>
+        <footer>
+            <p>&copy; 2024 Japan Stock Market Tracker. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            function fetchAndUpdateStockData() {
+    console.log("Refreshing data and updating the graph...");  // Log message
+
+    $('#loadingSpinner').show();
+    $('#stockGraph').empty(); // Clear any existing graph
+
+    $.ajax({
+        type: 'POST',
+        url: '/get_stock_data',
+        data: $('#stockForm').serialize(), // Serialize the form data
+        success: function(response) {
+            $('#loadingSpinner').hide();
+            if (response.error) {
+                alert(response.error);
+            } else {
+                $('#stockGraph').html(response.graph_html);
+            }
+        },
+        error: function() {
+            $('#loadingSpinner').hide();
+            alert('Error fetching stock data.');
+        }
+    });
+}
+
+
+            // Initial data fetch when the page loads
+            fetchAndUpdateStockData();
+
+            // Automatically refresh the data every 60 seconds (60000 milliseconds)
+            setInterval(fetchAndUpdateStockData, 6000);
+
+            // Update the plot when the form is submitted
+            $('#stockForm').submit(function(event) {
+                event.preventDefault();
+                fetchAndUpdateStockData();
+            });
+        });
+    </script>
+</body>
+</html>
