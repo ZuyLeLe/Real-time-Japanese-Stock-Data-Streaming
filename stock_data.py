@@ -3,7 +3,7 @@ import yfinance as yf
 from pymongo import MongoClient
 from time import sleep
 from datetime import datetime
-uri = "mongodb+srv://Zuylele:LeAnhHuyen134@stock-data.kkn7o.mongodb.net/"
+uri = "mongodb+srv://Zuylele:<Password>@stock-data.kkn7o.mongodb.net/"
 
 # MongoDB connection setup
 client = MongoClient(uri)  # Replace with your MongoDB connection string if needed
