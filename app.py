@@ -6,7 +6,7 @@ import json
 
 app = Flask(__name__, template_folder='templates')
 
-uri = "mongodb+srv://Zuylele:LeAnhHuyen134@stock-data.kkn7o.mongodb.net/"
+uri = "mongodb+srv://Zuylele:<Password>@stock-data.kkn7o.mongodb.net/"
 # MongoDB connection setup
 client = MongoClient(uri)  # Replace with your MongoDB connection string if needed
 db_3month = client['stock_3month']
